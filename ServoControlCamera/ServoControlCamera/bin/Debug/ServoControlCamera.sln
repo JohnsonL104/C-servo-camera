@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.10
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "ServoControlCamera", "ServoControlCamera.exe", "{0436BD2E-4178-4FA5-909D-79859927DC49}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\Users\Lucas Johnson\Documents\Visual Studio 2017\Projects\ServoControlCamera\ServoControlCamera\bin\Debug\ServoControlCamera.exe
+		RemoteMachine = DESKTOP-6QI74JC
+		StartingDirectory = C:\Users\Lucas Johnson\Documents\Visual Studio 2017\Projects\ServoControlCamera\ServoControlCamera\bin\Debug
+		Environment = Default
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0436BD2E-4178-4FA5-909D-79859927DC49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9697FF06-C7D3-48C0-8F5D-A2766EAFAA77}
+	EndGlobalSection
+EndGlobal

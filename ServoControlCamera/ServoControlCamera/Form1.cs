@@ -19,6 +19,9 @@ namespace ServoControlCamera
     public partial class Form1 : Form
     {
         public bool bt3Click = false;
+
+        // Initializer
+
         public Form1()
         {
             InitializeComponent();
@@ -28,11 +31,13 @@ namespace ServoControlCamera
         private VideoCaptureDevice cam2;
         MotionDetector motdet;
         private SerialPort serialPort1 = new SerialPort();
-        int pos2 = 90;
-        
+        bool alrm = false;
+        bool alrm2 = false;
+        // Startup
        
         private void Form1_Load(object sender, System.EventArgs e)
         {
+
             motdet = new MotionDetector(new TwoFramesDifferenceDetector(), new MotionAreaHighlighting());
             try
             {
@@ -56,13 +61,18 @@ namespace ServoControlCamera
             cam2 = new VideoCaptureDevice(webcam[comboBox1.SelectedIndex].MonikerString);
             cam.NewFrame += new NewFrameEventHandler(cam_NewFrame);
             videoSourcePlayer1.VideoSource = cam2;
+            cam.Stop();
+            cam2.Stop();
             cam.Start();
+            byte pos = Convert.ToByte(textBox1.Text);
+            serialPort1.Write(new byte[] { pos }, 0, 1);
 
-            
 
 
 
         }
+
+        //camera new frame Picture box
 
         void cam_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
@@ -70,17 +80,44 @@ namespace ServoControlCamera
             pictureBox1.Image = bit;
 
         }
-        
-        private void button2_Click(object sender, EventArgs e)
+
+        // Enter key Function
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            saveFileDialog1.InitialDirectory = @"c:\Picture";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if(e.KeyCode == Keys.Enter)
             {
-                pictureBox1.Image.Save(saveFileDialog1.FileName);
+                try
+                {
+                    byte pos = Convert.ToByte(textBox1.Text);
+
+                    serialPort1.Write(new byte[] { pos }, 0, 1);
+                    label2.Text = Convert.ToString(pos);
+                    textBox1.Text = null;
+
+                }
+                catch
+                {
+                    MessageBox.Show("Error: Input Has to Be an Integer Between 5 and 173");
+                }
             }
         }
 
+        // Motion Detection Function
 
+        private void videoSourcePlayer1_NewFrame(object sender, ref Bitmap image)
+        {
+            motdet.ProcessFrame(image);
+            while (true)
+            {
+                if(alrm == true)
+                {
+                    MessageBox.Show("we made it");
+                }
+            }
+        }
+
+        //Button 1 (Enter Button)
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -98,60 +135,18 @@ namespace ServoControlCamera
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
+        //Button 2 (Take Picture)
 
-         
-        }
-
-        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        private void button2_Click(object sender, EventArgs e)
         {
-            if(e.KeyCode == Keys.Enter)
+            saveFileDialog1.InitialDirectory = @"c:\Picture";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show("Test");
+                pictureBox1.Image.Save(saveFileDialog1.FileName);
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            try
-            {
-             
-                 pos2 = pos2 - 3;
-                Byte pos = Convert.ToByte(pos2);
-                serialPort1.Write(new byte[] { pos }, 0, 1);
-                label2.Text = Convert.ToString(pos);
-
-            }
-            catch
-            {
-                MessageBox.Show("Error: Input Has to Be an Integer Between 5 and 173");
-                
-            }
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            try
-            {
-
-                pos2 = pos2 + 3;
-                Byte pos = Convert.ToByte(pos2);
-                serialPort1.Write(new byte[] { pos }, 0, 1);
-                label2.Text = Convert.ToString(pos);
-
-            }
-            catch
-            {
-                MessageBox.Show("Error: Input Has to Be an Integer Between 5 and 173");
-
-            }
-        }
-
-        private void videoSourcePlayer1_NewFrame(object sender, ref Bitmap image)
-        {
-            motdet.ProcessFrame(image);
-        }
+        //Button 3 (Default camera Button)
 
         private void button3_Click_1(object sender, EventArgs e)
         {
@@ -159,8 +154,12 @@ namespace ServoControlCamera
             videoSourcePlayer1.Visible = false;
             cam2.Stop();
             cam.Start();
+            alrm2 = false;
+            label3.Text = "Camera: Default";
 
         }
+
+        //Button 4 (Motion Detection Button)
 
         private void button4_Click_1(object sender, EventArgs e)
         {
@@ -168,6 +167,52 @@ namespace ServoControlCamera
             videoSourcePlayer1.Visible = true;
             cam2.Start();
             cam.Stop();
+            alrm2 = true;
+            label3.Text = "Camera: Motion";
+        }
+
+        //Button 5 (Camera off button)
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            label3.Text = "Camera: Off";
+            cam2.Stop();
+            cam.Stop();
+            pictureBox1.Visible = false;
+            alrm2 = false;
+            videoSourcePlayer1.Visible = false;
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+        
+        void alarm()
+        {
+
+                if (alrm == true & alrm2 == true)
+                {
+                    MessageBox.Show("we made it");
+                }
+
+        }
+
+        // alarm on button
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            alrm = true;
+            label4.Text = "Alarm: On";
+        }
+
+        // Alarm off button
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            alrm = false;
+            label4.Text = "Alarm: off";
+            alarm();
         }
     }
 }
